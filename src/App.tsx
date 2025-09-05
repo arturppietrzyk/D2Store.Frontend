@@ -34,15 +34,29 @@
 
 // export default App
 
+// import LoginForm from "./components/LoginForm";
+
+// function App() {
+//   return (
+//     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+//       <h1>D2Store</h1>
+//       <LoginForm />
+//     </div>
+//   );
+// }
+
+// export default App;
+
 import LoginForm from "./components/LoginForm";
 
 function App() {
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>D2Store</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 font-sans p-6">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">D2Store</h1>
       <LoginForm />
     </div>
   );
 }
 
 export default App;
+
