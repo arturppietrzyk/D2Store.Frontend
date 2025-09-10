@@ -1,4 +1,4 @@
-import apiClient from "../../infrastructure/apiClient";
+import apiClient from "../../../infrastructure/apiClient";
 
 interface LoginRequest {
   email: string;
