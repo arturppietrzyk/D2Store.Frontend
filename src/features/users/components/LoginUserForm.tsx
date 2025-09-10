@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loginUser } from "../loginUser";
+import { loginUser } from "../services/loginUser";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
