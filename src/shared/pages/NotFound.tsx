@@ -4,10 +4,8 @@ function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-200 p-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
-        {/* Title */}
         <h1 className="text-3xl font-bold text-gray-800 mb-4">404</h1>
         <p className="text-gray-600 mb-6">Oops! The page you’re looking for doesn’t exist.</p>
-        {/* Links */}
         <div className="space-x-4">
           <Link
             to="/"
