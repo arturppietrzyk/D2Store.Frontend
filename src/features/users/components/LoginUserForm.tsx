@@ -1,18 +1,26 @@
 import { useState } from "react";
 import { loginUser } from "../services/loginUser";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const result = await loginUser({ email, password });
-      setMessage(`✅ Login successful! Token: ${result}`);
+      const jwtToken: string = await loginUser({ email, password });
+      setMessage("✅ Login successful!");
+      navigate("/");
     } catch (error: any) {
-      setMessage("❌ Login failed. Check your credentials.");
+      if (error.response?.status == 400) {
+        setMessage("❌ " + error.response.data.message);
+      }
+      else {
+        setMessage("❌ Login failed. Please contact the admin.");
+      }
       console.error(error);
     }
   }

@@ -1,22 +1,35 @@
 import { useState } from "react";
 import { registerUser } from "../services/registerUser";
+import { useNavigate } from "react-router-dom";
 
 function RegisterForm() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [address, setAddress] = useState("");
+    const navigate = useNavigate();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (password != confirmPassword) {
+            setMessage("❌ Passwords do not match.");
+            return;
+        }
         try {
             await registerUser({ firstName, lastName, email, password, phoneNumber, address });
             setMessage("✅ Registration successful!");
+            navigate("/login");
         } catch (error: any) {
-            setMessage("❌ Registration failed. Check your credentials.");
+            if (error.response?.status == 400) {
+                setMessage("❌ " + error.response.data.message);
+            }
+            else {
+                setMessage("❌ Registration failed. Please contact the admin.");
+            }
             console.error(error);
         }
     }
@@ -31,7 +44,8 @@ function RegisterForm() {
                     onChange={e => setFirstName(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="John"
-                    required />
+                    required 
+                />
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700">Last Name</label>
@@ -41,7 +55,8 @@ function RegisterForm() {
                     onChange={e => setLastName(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="Smith"
-                    required />
+                    required 
+                />
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -51,7 +66,8 @@ function RegisterForm() {
                     onChange={e => setEmail(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="you@example.com"
-                    required />
+                    required 
+                />
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700">Password</label>
@@ -65,6 +81,17 @@ function RegisterForm() {
                 />
             </div>
             <div>
+                <label className="block text-sm font-medium text-gray-700">Re-type Password</label>
+                <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="••••••••"
+                    required
+                />
+            </div>
+            <div>
                 <label className="block text-sm font-medium text-gray-700">Phone Number</label>
                 <input
                     type="phoneNumber"
@@ -72,7 +99,8 @@ function RegisterForm() {
                     onChange={e => setPhoneNumber(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="xxxxxxxxxxx"
-                    required />
+                    required 
+                />
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700">Address</label>
@@ -82,7 +110,8 @@ function RegisterForm() {
                     onChange={e => setAddress(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="10 Hello St."
-                    required />
+                    required 
+                />
             </div>
             <button
                 type="submit"

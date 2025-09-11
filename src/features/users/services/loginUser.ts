@@ -5,10 +5,9 @@ interface LoginRequest {
   password: string;
 }
 
-
 export async function loginUser(credentials: LoginRequest): Promise<string> {
   const response = await apiClient.post<string>("/login-user", credentials, {
     headers: { "Content-Type": "application/json" }
   });
-  return response.data; // response.data IS the token string
+  return response.data;
 }
