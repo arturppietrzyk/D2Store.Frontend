@@ -1,4 +1,5 @@
 import apiClient from "../../../infrastructure/apiClient";
+import type { RegisterUserResponse } from "../types/registerUserResponse";
 
 interface RegisterRequest {
   firstName: string;
@@ -9,8 +10,8 @@ interface RegisterRequest {
   address: string;
 }
 
-export async function registerUser(registerRequest: RegisterRequest): Promise<string> {
-  const response = await apiClient.post<string>("/register-user", registerRequest, {
+export async function registerUser(registerRequest: RegisterRequest): Promise<RegisterUserResponse> {
+  const response = await apiClient.post<RegisterUserResponse>("/register-user", registerRequest, {
     headers: { "Content-Type": "application/json" }
   });
   return response.data; 
