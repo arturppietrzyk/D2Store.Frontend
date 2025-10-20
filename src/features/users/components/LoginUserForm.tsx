@@ -11,11 +11,12 @@ function LoginForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const jwtToken: string = await loginUser({ email, password });
+      //const jwtToken: string = await loginUser({ email, password });
+      await loginUser({email, password});
       setMessage("✅ Login successful!");
       navigate("/");
     } catch (error: any) {
-      if (error.response?.status == 400) {
+      if (error.response?.status == 400 || error.response?.status == 403 || error.response?.status == 404) {
         setMessage("❌ " + error.response.data.message);
       }
       else {
