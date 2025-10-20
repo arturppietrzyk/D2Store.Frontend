@@ -6,6 +6,6 @@ export interface RegisterUserResponse{
     passwordHash: string,
     phoneNumber: string, 
     role: string, 
-    createdAte: string, 
+    createdAt: string, 
     lastModified: string
 };
