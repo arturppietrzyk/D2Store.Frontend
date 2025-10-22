@@ -24,7 +24,7 @@ function RegisterForm() {
             setMessage("✅ Registration successful!");
             navigate("/login");
         } catch (error: any) {
-            if (error.response?.status == 400 || error.response?.status == 403 || error.response?.status == 404) {
+            if (error.response?.status == 400 || error.response?.status == 401 || error.response?.status == 403 || error.response?.status == 404) {
                 setMessage("❌ " + error.response.data.message);
             }
             else {
