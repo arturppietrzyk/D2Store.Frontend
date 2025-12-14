@@ -3,7 +3,7 @@ import RegisterForm from "../components/RegisterUserForm";
 
 function RegisterUser() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-200 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-blue-50">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         <div className="flex flex-col items-center mb-6">
           <img
