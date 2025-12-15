@@ -1,3 +1,4 @@
+// Api calls to the productById endpoint and products endpoint. 
 import apiClient from "../../../infrastructure/apiClient";
 import type { Product } from "../types/products";
 

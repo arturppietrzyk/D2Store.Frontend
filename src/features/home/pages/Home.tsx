@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import type { Product } from '../types/products';
 import { Search } from 'lucide-react';
+import { getProducts } from '../services/getProducts';
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -16,39 +17,29 @@ export default function HomePage() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5112/api/products?pageNumber=1&pageSize=100');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
-        
-        const data = await response.json();
+        const data = await getProducts(1, 100);
         setProducts(data);
         setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        console.error('Error fetching products:', err);
+      } catch (error: any) {
+        let errorMessage = "Error loading products. Please try again later or contact support.";
+        if (error.response?.status == 400) {
+          errorMessage = error.response.data?.message;
+        }
+        else {
+          errorMessage = `Server Error: ${error.response.status}. Please contact the admin.`;
+        }
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
-  // Filter products based on search term and category
-  // const filteredProducts = products.filter(product => {
-  //   const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  //   const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-  //   return matchesSearch && matchesCategory;
-  // });
-
-  // Filter products based on search term only (category filter disabled until API supports it)
-const filteredProducts = products.filter(product => {
-  const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  // Temporarily ignore category filtering since API doesn't provide category field
-  return matchesSearch;
-});
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
 
   const scrollToProducts = () => {
     productsRef.current?.scrollIntoView({
@@ -68,7 +59,7 @@ const filteredProducts = products.filter(product => {
             <p className="text-lg text-gray-700 max-w-md mx-auto">
               Your Shop, Your Way
             </p>
-            <button 
+            <button
               onClick={scrollToProducts}
               className="mt-6 bg-blue-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg">
               Explore Products
@@ -79,11 +70,10 @@ const filteredProducts = products.filter(product => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategory === category
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 {category}
               </button>
