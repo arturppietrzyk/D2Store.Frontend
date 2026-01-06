@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../services/loginUser";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -10,19 +11,27 @@ function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setMessage("");
+
     try {
-      //const jwtToken: string = await loginUser({ email, password });
-      await loginUser({email, password});
+      await loginUser({ email, password });
       setMessage("✅ Login successful!");
       navigate("/");
-    } catch (error: any) {
-      if (error.response?.status == 400 || error.response?.status == 401 || error.response?.status == 403 || error.response?.status == 404) {
-        setMessage("❌ " + error.response.data.message);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const serverErrorMessage = err.response?.data?.message || "❌ An unexpected error occurred";
+
+        if (status && [400, 404, 500].includes(status)) {
+          setMessage(`❌ ${serverErrorMessage}`);
+        } else {
+          setMessage("❌ Login failed. Please contact the admin.");
+        }
+      } else {
+        setMessage("❌ An unexpected error occurred.");
       }
-      else {
-        setMessage("❌ Login failed. Please contact the admin.");
-      }
-      console.error(error);
+
+      console.error(err);
     }
   }
 

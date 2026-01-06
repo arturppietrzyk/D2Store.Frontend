@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getProductById } from '../services/getProducts';
 import type { Product } from '../types/products';
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
+import axios from 'axios';
 
 export default function ProductDetailsPage() {
   const { productId } = useParams<{ productId: string }>();
@@ -18,23 +19,33 @@ export default function ProductDetailsPage() {
       return;
     }
 
-    const fetchProduct = async () => {
+     const fetchProduct = async () => {
       try {
         setLoading(true);
         const data = await getProductById(productId);
         setProduct(data);
         setError(null);
         setCurrentImageIndex(0); 
-      } catch (err) {
-        setError('Failed to fetch product details.');
-        console.error('Error fetching product:', err);
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const status = err.response?.status;
+          const serverErrorMessage = err.response?.data?.message;
+
+         if (status && [400, 403, 404, 500].includes(status)) {
+            setError((serverErrorMessage));
+          } else{
+            setError ("Loading the product failed. Please contact the admin.");
+          }
+        } else{
+            setError("An unexpected error occurred.")
+        }
+        console.error(err);
       } finally {
         setLoading(false);
       }
-    };
-
+    };  
     fetchProduct();
-  }, [productId]);
+  }, []);
 
   const sortedImages = useMemo(() => {
     if (!product || !product.images) return [];
