@@ -1,46 +1,60 @@
 import { useState, useRef, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import type { Product } from '../types/products';
+import type { Category } from '../types/categories';
 import { Search } from 'lucide-react';
 import { getProducts } from '../services/getProducts';
+import { getCategories } from '../services/getCategories';
+import axios from 'axios';
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
   const productsRef = useRef<HTMLDivElement>(null);
-  const categories = ['All', 'Graphic Cards', 'Monitors', 'Laptops', 'Power Supply'];
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getProducts(1, 100);
-        setProducts(data);
+        const [productsData, categoriesData] = await Promise.all([
+          getProducts(1, 100),
+          getCategories()
+        ]);
+        setProducts(productsData);
+        setCategories(categoriesData);
         setError(null);
-      } catch (error: any) {
-        let errorMessage = "Error loading products. Please try again later or contact support.";
-        if (error.response?.status == 400) {
-          errorMessage = error.response.data?.message;
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const status = err.response?.status;
+          const serverErrorMessage = err.response?.data?.message;
+
+          if (status && [400, 500].includes(status)) {
+            setError((serverErrorMessage));
+          } else {
+            setError("Loading the products failed. Please contact the admin.");
+          }
+        } else {
+          setError("An unexpected error occurred.")
         }
-        else {
-          errorMessage = `Server Error: ${error.response.status}. Please contact the admin.`;
-        }
-        setError(errorMessage);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchData();
   }, []);
-
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+    const matchesCategory =
+      selectedCategoryId === 'all' ||
+      product.categories?.some(cat => cat.categoryId === selectedCategoryId);
 
+    return matchesSearch && matchesCategory;
+  });
   const scrollToProducts = () => {
     productsRef.current?.scrollIntoView({
       behavior: 'smooth',
@@ -49,7 +63,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div>
       <section className="bg-gray-100 py-16 sm:py-24" style={{ backgroundImage: "url('/banner-background.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <div className="bg-white/80 p-8 rounded-xl max-w-2xl mx-auto">
@@ -65,23 +79,32 @@ export default function HomePage() {
               Explore Products
             </button>
           </div>
-          <div className="flex justify-center mt-8 space-x-2 sm:space-x-4 bg-white/90 p-3 rounded-xl max-w-fit mx-auto shadow-xl">
+          <div className="flex flex-wrap justify-center mt-8 gap-2 bg-white/90 p-3 rounded-xl max-w-fit mx-auto shadow-xl">
+            <button
+              onClick={() => setSelectedCategoryId('all')}
+              className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategoryId === 'all'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+            >
+              All
+            </button>
             {categories.map((category) => (
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategory === category
+                key={category.categoryId}
+                onClick={() => setSelectedCategoryId(category.categoryId)}
+                className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategoryId === category.categoryId
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
-                {category}
+                {category.name}
               </button>
             ))}
           </div>
         </div>
       </section>
-      <section ref={productsRef} className="py-12 sm:py-16">
+      <section ref={productsRef} className="py-12 sm:py-16 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 max-w-xl mx-auto">
             <div className="relative">

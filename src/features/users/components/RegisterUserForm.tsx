@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../services/registerUser";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function RegisterForm() {
     const [firstName, setFirstName] = useState("");
@@ -15,6 +16,7 @@ function RegisterForm() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setMessage("");
         if (password != confirmPassword) {
             setMessage("❌ Passwords do not match.");
             return;
@@ -23,14 +25,21 @@ function RegisterForm() {
             await registerUser({ firstName, lastName, email, password, phoneNumber, address });
             setMessage("✅ Registration successful!");
             navigate("/login");
-        } catch (error: any) {
-            if (error.response?.status == 400 || error.response?.status == 401 || error.response?.status == 403 || error.response?.status == 404) {
-                setMessage("❌ " + error.response.data.message);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const status = err.response?.status;
+                const serverErrorMessage = err.response?.data?.message || "❌ An unexpected error occurred";
+
+                if (status && [400, 403, 404, 500].includes(status)) {
+                    setMessage(`❌ ${serverErrorMessage}`);
+                } else {
+                    setMessage("❌ Registration failed. Please contact the admin.");
+                }
+            } else {
+                setMessage("❌ An unexpected error occurred.");
             }
-            else {
-                setMessage("❌ Registration failed. Please contact the admin.");
-            }
-            console.error(error);
+
+            console.error(err);
         }
     }
 
@@ -44,7 +53,7 @@ function RegisterForm() {
                     onChange={e => setFirstName(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="John"
-                    required 
+                    required
                 />
             </div>
             <div>
@@ -55,7 +64,7 @@ function RegisterForm() {
                     onChange={e => setLastName(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="Smith"
-                    required 
+                    required
                 />
             </div>
             <div>
@@ -66,7 +75,7 @@ function RegisterForm() {
                     onChange={e => setEmail(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="you@example.com"
-                    required 
+                    required
                 />
             </div>
             <div>
@@ -99,7 +108,7 @@ function RegisterForm() {
                     onChange={e => setPhoneNumber(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="xxxxxxxxxxx"
-                    required 
+                    required
                 />
             </div>
             <div>
@@ -110,7 +119,7 @@ function RegisterForm() {
                     onChange={e => setAddress(e.target.value)}
                     className="mt-1 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="10 Hello St."
-                    required 
+                    required
                 />
             </div>
             <button

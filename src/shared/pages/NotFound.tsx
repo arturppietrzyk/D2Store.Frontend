@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">404</h1>
         <p className="text-gray-600 mb-6">Oops! The page you’re looking for doesn’t exist.</p>

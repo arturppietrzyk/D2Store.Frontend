@@ -1,4 +1,4 @@
-// objects that map to the backend api response.  
+import type { Category } from './categories';
 
 export type ProductImage = {
   productImageId: string;
@@ -15,6 +15,5 @@ export type Product = {
   addedDate: string;
   lastModified: string;
   images: ProductImage[];
-  // need to add categories to the backend first for them to work here. 
-  category?: string; 
+  categories?: Category[]; 
 };
