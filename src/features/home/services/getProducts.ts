@@ -13,6 +13,6 @@ export async function getProducts(
 }
 
 export async function getProductById(productId: string): Promise<Product> {
-  const response = await apiClient.get<Product>(`/product/${productId}`);
+  const response = await apiClient.get<Product>(`/products/${productId}`);
   return response.data;
 }

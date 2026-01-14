@@ -182,11 +182,6 @@ export default function ProductDetailsPage() {
               <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
                 {product.name}
               </h1>
-              {product.category && (
-                <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mt-1">
-                  {product.category}
-                </span>
-              )}
             </div>
             <div className="flex items-end justify-between">
               <span className="text-4xl font-bold text-gray-900">

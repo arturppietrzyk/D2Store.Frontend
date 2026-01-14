@@ -11,7 +11,7 @@ interface RegisterRequest {
 }
 
 export async function registerUser(registerRequest: RegisterRequest): Promise<RegisterUserResponse> {
-  const response = await apiClient.post<RegisterUserResponse>("/register-user", registerRequest, {
+  const response = await apiClient.post<RegisterUserResponse>("/users", registerRequest, {
     headers: { "Content-Type": "application/json" }
   });
   return response.data; 

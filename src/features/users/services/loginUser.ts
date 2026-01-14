@@ -7,7 +7,7 @@ interface LoginRequest {
 }
 
 export async function loginUser(credentials: LoginRequest): Promise<AuthResponse> {
-  const response = await apiClient.post<AuthResponse>("/login-user", credentials, {
+  const response = await apiClient.post<AuthResponse>("/users/login", credentials, {
     headers: { "Content-Type": "application/json" }
   });
   return response.data;
