@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GetOrdersForUser } from "../services/getOrdersForUser";
-import { getUserIdFromToken } from "../../../utils/auth";
+import { getUserIdFromToken } from "../../../utils/jwtDecoder";
 import type { Order } from '../types/order';
 import axios from "axios";
 
