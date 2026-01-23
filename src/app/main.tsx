@@ -9,6 +9,7 @@ import HomePage from '../features/home/pages/Home.tsx';
 import MainLayout from '../shared/layouts/MainLayout.tsx';
 import ProductDetailPage from '../features/home/pages/ProductDetailPage.tsx';
 import Account from '../features/users/pages/Account.tsx';
+import { AuthProvider } from '../infrastructure/authContext.tsx'; 
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router ={router}/>
+    <AuthProvider>
+      <RouterProvider router={router}/>
+    </AuthProvider>
   </StrictMode>
 );

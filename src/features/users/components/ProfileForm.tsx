@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getUserById } from '../services/getUser';
 import type { UpdateRequest } from "../types/updateRequest";
 import { updateUser } from '../services/userService';
-import { getUserIdFromToken } from "../../../utils/auth";
+import { getUserIdFromToken } from "../../../utils/jwtDecoder";
 import axios from "axios";
 
 const ProfileForm = () => {
