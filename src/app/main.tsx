@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from '../features/home/pages/Home.tsx';
 import MainLayout from '../shared/layouts/MainLayout.tsx';
 import ProductDetailPage from '../features/home/pages/ProductDetailPage.tsx';
+import Account from '../features/users/pages/Account.tsx';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
     children: [
       {path:"/", element:<HomePage/>},
       {path:"/products/:productId", element:<ProductDetailPage/>},
+      {path: "/account", element: <Account />},
       {path:"/*", element:<NotFound/>}
     ]
   },

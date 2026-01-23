@@ -1,6 +1,5 @@
-// Api calls to the productById endpoint and products endpoint. 
 import apiClient from "../../../infrastructure/apiClient";
-import type { Product } from "../types/products";
+import type { Product } from "../types/product";
 
 export async function getProducts(
   pageNumber: number = 1,

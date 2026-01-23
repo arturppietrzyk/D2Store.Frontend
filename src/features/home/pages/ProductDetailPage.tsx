@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProductById } from '../services/getProducts';
-import type { Product } from '../types/products';
+import type { Product } from '../types/product';
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 
@@ -18,7 +18,6 @@ export default function ProductDetailsPage() {
       setLoading(false);
       return;
     }
-
      const fetchProduct = async () => {
       try {
         setLoading(true);

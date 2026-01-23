@@ -1,27 +1,29 @@
 import { useState } from "react";
 import { loginUser } from "../services/loginUser";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage("");
 
     try {
-      await loginUser({ email, password });
+      const data = await loginUser({ email, password });
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("expiresAt", data.expiresAt);
       setMessage("✅ Login successful!");
-      navigate("/");
+      window.location.href = "/";
+      //navigate("/");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const status = err.response?.status;
         const serverErrorMessage = err.response?.data?.message || "❌ An unexpected error occurred";
-
         if (status && [400, 404, 500].includes(status)) {
           setMessage(`❌ ${serverErrorMessage}`);
         } else {
@@ -30,7 +32,6 @@ function LoginForm() {
       } else {
         setMessage("❌ An unexpected error occurred.");
       }
-
       console.error(err);
     }
   }
