@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import type { Product } from '../types/products';
-import type { Category } from '../types/categories';
+import type { Product } from '../types/product';
+import type { Category } from '../types/category';
 import { Search } from 'lucide-react';
 import { getProducts } from '../services/getProducts';
 import { getCategories } from '../services/getCategories';
@@ -52,7 +52,6 @@ export default function HomePage() {
     const matchesCategory =
       selectedCategoryId === 'all' ||
       product.categories?.some(cat => cat.categoryId === selectedCategoryId);
-
     return matchesSearch && matchesCategory;
   });
   const scrollToProducts = () => {

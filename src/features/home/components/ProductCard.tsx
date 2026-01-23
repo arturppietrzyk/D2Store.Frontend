@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import type { Product } from '../types/products';
+import type { Product } from '../types/product';
 
 interface ProductCardProps {
   product: Product;
@@ -7,10 +7,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0];
-  const imageUrl = primaryImage 
-    ? `http://localhost:5112/${primaryImage.location}` 
-    : '/placeholder.png';
-
+  const imageUrl = primaryImage ? `http://localhost:5112/${primaryImage.location}` : '/placeholder.png';
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">

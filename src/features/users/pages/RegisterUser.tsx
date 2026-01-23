@@ -19,6 +19,12 @@ function RegisterUser() {
             Login
           </Link>
         </p>
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Use without registering?{" "}
+          <Link to="/" className="text-blue-600 font-semibold hover:underline">
+            Click here
+          </Link>
+        </p>
       </div>
     </div>
   );

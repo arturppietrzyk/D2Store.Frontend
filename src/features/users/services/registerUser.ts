@@ -1,17 +1,9 @@
 import apiClient from "../../../infrastructure/apiClient";
-import type { RegisterUserResponse } from "../types/registerUserResponse";
+import type { User } from "../types/user";
+import type { RegisterRequest } from "../types/registerRequest"
 
-interface RegisterRequest {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  address: string;
-}
-
-export async function registerUser(registerRequest: RegisterRequest): Promise<RegisterUserResponse> {
-  const response = await apiClient.post<RegisterUserResponse>("/users", registerRequest, {
+export async function registerUser(registerRequest: RegisterRequest): Promise<User> {
+  const response = await apiClient.post<User>("/users", registerRequest, {
     headers: { "Content-Type": "application/json" }
   });
   return response.data; 
