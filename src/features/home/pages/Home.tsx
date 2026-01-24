@@ -13,7 +13,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const productsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,8 +50,9 @@ export default function HomePage() {
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategoryId === 'all' ||
-      product.categories?.some(cat => cat.categoryId === selectedCategoryId);
+      selectedCategoryIds.length === 0 ||
+      product.categories?.some(cat => selectedCategoryIds.includes(cat.categoryId));
+
     return matchesSearch && matchesCategory;
   });
   const scrollToProducts = () => {
@@ -60,6 +61,14 @@ export default function HomePage() {
       block: 'start',
     });
   };
+  const toggleCategory = (id: string) => {
+      setSelectedCategoryIds((prev) =>
+        prev.includes(id)
+          ? prev.filter((catId) => catId !== id)
+          : [...prev, id]
+      );
+    };
+    const clearFilters = () => setSelectedCategoryIds([]);
 
   return (
     <div>
@@ -80,21 +89,22 @@ export default function HomePage() {
           </div>
           <div className="flex flex-wrap justify-center mt-8 gap-2 bg-white/90 p-3 rounded-xl max-w-fit mx-auto shadow-xl">
             <button
-              onClick={() => setSelectedCategoryId('all')}
-              className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategoryId === 'all'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              onClick={clearFilters}
+              className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategoryIds.length === 0
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
             >
               All
             </button>
+
             {categories.map((category) => (
               <button
                 key={category.categoryId}
-                onClick={() => setSelectedCategoryId(category.categoryId)}
-                className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategoryId === category.categoryId
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                onClick={() => toggleCategory(category.categoryId)}
+                className={`py-2 px-4 text-sm font-medium rounded-lg transition-colors ${selectedCategoryIds.includes(category.categoryId)
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 {category.name}
